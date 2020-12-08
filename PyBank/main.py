@@ -7,78 +7,83 @@ import csv
 # import budget_data from csv file 
 csvpath = 'resources/budget_data.csv'
 
+# setting variables and counters 
 date_count = 0 
 net_total = 0
 changes = 0
 sum_of_changes = 0
 ave_cahnge = 0
-gr_increase = 0 
-gr_decrease = 0 
+gr_increase = 0
+gr_decrease = 0
 date_increase = ""
 date_decrease = ""
 
-# read the source file (budget_data)
+# 1- counting the months in the dataset
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter = '-')
     
     # loop through rows 
+    next(csvreader)
     for row in csvreader:
         date_count = date_count + 1   
       
-# print('total months in the budget data:' + total)
-print("Total Months: ", date_count -1)
+print("Total Months: ", date_count)
+csvfile.close()
 
-# calculate the total amount of Profit/Losses
+# 2- calculate the total amount of Profit/Losses
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter = ',')
      
-    # loop through rows 
+    # loop through rows - start with the second row (skipping the header row)
     next(csvreader)
     for row in csvreader:
         net_total = int(net_total) + int(row[1])
          
-    # change[i] = profits[i] - profits[i-1]
     print("Total: $", net_total)
+    csvfile.close()
 
-
+# 3- calculating changes in profit/losses and finding average
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter = ',')
-
-    next(csvreader)
-    for row in csvreader:
-
-        row1 = int(row[1]) 
-        row2 = int(row[1])+1
-        
-        changes = row1 + row2
     
-
-        #changes = int(int(row)+1)[1] + int(row[1])
-        sum_of_changes = sum_of_changes + changes
-    next
-    ave_cahnge = sum_of_changes/(date_count-1)
-    print("Average Change: $", ave_cahnge)
-
-with open(csvpath) as csvfile:
-    csvreader = csv.reader(csvfile, delimiter = ',')
-     
-    # loop through rows 
+    
+    previous_row_value = None
+    # loope through rows - skipping the header row 
     next(csvreader)
     for row in csvreader:
-        #net_total = int(net_total) + int(row[1])
+        if previous_row_value == None:
+            previous_row_value = float(row[1])
+            continue
+        current_row_value = float(row[1])
+        changes = current_row_value - previous_row_value
+        sum_of_changes = sum_of_changes + changes
 
-        if gr_increase < int(row[1]):
-            gr_increase = int(row[1])
+# 4- greatest increase / decrease 
+        # finding the INCREASE 
+        if gr_increase < changes:
+            gr_increase = changes
             date_increase = row[0]
 
-        if gr_decrease > int(row[1]):
-             gr_decrease = int(row[1])
-             date_decrease = row[0]
-         
+
+        # finding the DECREASE
+        if gr_decrease > changes:
+            gr_decrease = changes
+            date_decrease = row[0]
+
+
+        # update previous row
+        previous_row_value = current_row_value
+        ave_change = sum_of_changes/(date_count-1)
+    
+    print("Average Change: $", "{:.2f}".format(ave_change))
     print("Greatest Increase in Profits: ", date_increase, "$", gr_increase)
     print("Greatest Decrease in Profits: ", date_decrease, "$", gr_decrease)
 
-# export budget_data to a csv file 
+    csvfile.close()
+
+
+
+# export the outcomes of the dataset to a csv file 
 output_path = 'analysis/analized_budget_data.csv'
 
 with open(output_path, 'w') as csvfile:
@@ -91,5 +96,6 @@ with open(output_path, 'w') as csvfile:
         'Total: $': net_total,
         'Average Change:': ave_cahnge, 
         'Greatest Increase in Profits: ': gr_increase , 
-        'Greatest Decrease in Profits: ': gr_decrease}])
+        'Greatest Decrease in Profits: ': gr_decrease
+        }])
 
