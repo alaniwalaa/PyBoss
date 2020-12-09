@@ -82,11 +82,8 @@ with open(csvpath) as csvfile:
     csvfile.close()
 
 
-
 # export the outcomes of the dataset to a csv file 
-output_path = 'analysis/analized_budget_data.csv'
-
-with open(output_path, 'w') as csvfile:
+with open('analysis/analized_budget_data.csv', 'w') as csvfile:
 
     # Initialize csv.writer
     csvwriter = csv.writer(csvfile, delimiter=',')
@@ -94,8 +91,8 @@ with open(output_path, 'w') as csvfile:
     csvwriter.writerow([{
         'Total Monthe': date_count,
         'Total: $': net_total,
-        'Average Change:': ave_cahnge, 
-        'Greatest Increase in Profits: ': gr_increase , 
+        'Average Change:': ave_change, 
+        'Greatest Increase in Profits: ': gr_increase, 
         'Greatest Decrease in Profits: ': gr_decrease
-        }])
+    }])
 
