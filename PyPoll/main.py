@@ -31,6 +31,8 @@ with open(csvpath) as csvfile:
     candidate_list = []
     cand_votes = 0
     cand_win = []
+    cand_percent = 0.0
+    percent_list = []
     
     # loop through rows - start with the second row (skipping the header row)
     next(csvreader)
@@ -39,11 +41,12 @@ with open(csvpath) as csvfile:
         if cand_name not in candidate_list:
             candidate_list.append(cand_name)
             candidate_dict[cand_name] = cand_votes 
+            cand_percent = cand_votes / vote_count
+            
          
         candidate_dict[cand_name] = candidate_dict[cand_name] + 1
-    
+
     '''cand_percent = cand_votes/vote_count
-    candidate_dict[cand_name] = candidate_dict[cand_name] + cand_percent
     print(cand_percent)''' 
    
     print(candidate_dict)
@@ -56,14 +59,11 @@ with open(csvpath) as csvfile:
 
 
 # export the outcomes of the dataset to a csv file 
-with open('analysis/analized_voters_data.csv', 'w') as csvfile:
+with open('analysis/analized_voters_data.csv', 'w', newline='\n') as csvfile:
 
     # Initialize csv.writer
     csvwriter = csv.writer(csvfile, delimiter=',')
 
-    csvwriter.writerow([{
-        'Total Votes': vote_count,
-        cand_name: cand_votes,
-        'Winner: ': cand_win
-
-    }])
+    csvwriter.writerow(['Total Votes: ', vote_count,])
+    csvwriter.writerow([candidate_dict, cand_votes])
+    csvwriter.writerow(['Winner: ', cand_win])

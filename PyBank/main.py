@@ -83,7 +83,7 @@ with open(csvpath) as csvfile:
 
 
 # export the outcomes of the dataset to a csv file 
-with open('analysis/analized_budget_data.csv', 'w') as csvfile:
+with open('analysis/analized_budget_data.csv', 'w', newline='\n') as csvfile:
 
     # Initialize csv.writer
     csvwriter = csv.writer(csvfile, delimiter=',')
