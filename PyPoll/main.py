@@ -28,18 +28,20 @@ csvfile.close()
 with open(csvpath) as csvfile:
     csvreader = csv.reader(csvfile, delimiter = ',')
     candidate_dict = {} 
+    candidate_list = []
     pre_candidate = None
     current_candidate = ''
     cand_votes = 0
+    
     # loop through rows - start with the second row (skipping the header row)
     next(csvreader)
     for row in csvreader:
-        if pre_candidate == None:
-            pre_candidate = row[2]
-            candidate_dict[pre_candidate] = candidate_dict[pre_candidate] + 1 
-        current_candidate = row[2]
-        candidate_dict[pre_candidate] = cand_votes
-        pre_candidate = current_candidate
+        cand_name = row[2]
+        if cand_name not in candidate_list:
+            candidate_list.append(cand_name)
+            candidate_dict[cand_name] = cand_votes 
+         
+        candidate_dict[cand_name] = candidate_dict[cand_name] + 1
     
     print(candidate_dict)
 
